@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }} - Clubber</title>
+      {% else %}
+      <title>Welcome to Clubber</title>
+      {% endif %}
+    </head>
+    <body>
+        <div>Clubber: <a href="/index">Home</a></div>
+        <hr>
+        {% block content %}{% endblock %}
+    </body>
+</html>
