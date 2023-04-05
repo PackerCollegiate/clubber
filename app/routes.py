@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
-from app.forms import LoginForm, RegistrationForm
+from app.forms import LoginForm, RegistrationForm, ClubForm
 from app.models import User
 
 
@@ -60,3 +60,14 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+@app.route('/createclub', methods=['GET', 'POST'])
+@login_required
+def createclub():
+    form = ClubForm()
+    print('before conditional')
+    if form.validate_on_submit():
+        print('hi')
+        flash('Your club has been registered!')
+        return redirect(url_for('index'))
+    return render_template('createclub.html', title='Create Club', form=form)

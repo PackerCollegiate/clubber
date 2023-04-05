@@ -28,3 +28,8 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Please use a different email address.')
+
+class ClubForm(FlaskForm):
+    name = StringField('Club Name', validators=[DataRequired()])
+    description = StringField('Club Description', validators=[DataRequired()])
+    submit = SubmitField('Register Club!')
