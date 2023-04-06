@@ -3,6 +3,9 @@
 {% block content %}
     <h1>Hi, {{ current_user.username }}!</h1>
     {% for club in clubs %}
-    <div><p>{{ club.leader.username }} created: <b>{{ club.name }}</b></p></div>
+    <div><p>{{ club.user_name }} created: <b>{{ club.name }}</b></p>
+      <p>{{club.description}}</p>
+      <br>
+    </div>
     {% endfor %}
 {% endblock %}

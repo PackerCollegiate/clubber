@@ -27,6 +27,7 @@ class Club(db.Model):
     name = db.Column(db.String(40), index=True, unique=True)
     description = db.Column(db.String(300))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_name = db.Column(db.String(40))
 
     def __repr__(self):
         return '<{} Club>'.format(self.name)

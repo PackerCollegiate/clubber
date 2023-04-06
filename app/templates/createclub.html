@@ -12,13 +12,10 @@
             {% endfor %}
         </p>
 
-      <p>
-    		{{form.description.label}}<br>
-    		{{form.description(size=64)}}<br>
-    		{% for error in form.name.errors %}
-              <span style="color: red;">[{{ error }}]</span>
-              {% endfor %}
-        </p>
+	   <p>
+	    	{{form.description.label}}<br>
+	    	{{form.description(size=64)}}<br>
+	       </p>
 
         <p>{{ form.submit()}}</p>
     </form>

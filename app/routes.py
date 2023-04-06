@@ -3,23 +3,14 @@ from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, ClubForm
-from app.models import User
+from app.models import User, Club
 
 
 @app.route('/')
 @app.route('/index')
 @login_required
 def index():
-    clubs = [
-        {
-            'leader': {'username': 'John'},
-            'name': 'Math Club!'
-        },
-        {
-            'leader': {'username': 'Susan'},
-            'name': 'Yearbook Club!'
-        }
-    ]
+    clubs = Club.query.all()
     return render_template('index.html', title='Home', clubs=clubs)
 
 
@@ -65,9 +56,10 @@ def register():
 @login_required
 def createclub():
     form = ClubForm()
-    print('before conditional')
     if form.validate_on_submit():
-        print('hi')
+        club = Club(name=form.name.data, description=form.description.data, user_id=current_user.id, user_name=current_user.username)
+        db.session.add(club)
+        db.session.commit()
         flash('Your club has been registered!')
         return redirect(url_for('index'))
     return render_template('createclub.html', title='Create Club', form=form)
