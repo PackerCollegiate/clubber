@@ -38,3 +38,6 @@ class ClubForm(FlaskForm):
         club = Club.query.filter_by(name=name.data).first()
         if club is not None:
             raise ValidationError('Club exists. Please choose a different name.')
+
+class EmptyForm(FlaskForm):
+    submit = SubmitField('Submit')

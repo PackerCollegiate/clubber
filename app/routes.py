@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, ClubForm
-from app.models import User, Club
+from app.models import User, Club, EmptyForm
 
 
 @app.route('/')
@@ -63,3 +63,35 @@ def createclub():
         flash('Your club has been registered!')
         return redirect(url_for('index'))
     return render_template('createclub.html', title='Create Club', form=form)
+
+@app.route('/join/<name>', methods=['POST'])
+@login_required
+def join(name):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        club = Club.query.filter_by(name=name).first()
+        if club is None:
+            flash('Club {} not found.'.format(club))
+            return redirect(url_for('index'))
+        current_user.join(club)
+        db.session.commit()
+        flash('You joined {}!'.format(name))
+        return redirect(url_for('index'))
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/unjoin/<name>', methods=['POST'])
+@login_required
+def unjoin(name):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        club = Club.query.filter_by(name=name).first()
+        if club is None:
+            flash('Club {} not found.'.format(name))
+            return redirect(url_for('index'))
+        current_user.unjoin(name)
+        db.session.commit()
+        flash('You are not in {}.'.format(name))
+        return redirect(url_for('index'))
+    else:
+        return redirect(url_for('index'))
