@@ -137,3 +137,11 @@ def unfollow(username):
         return redirect(url_for('user', username=username))
     else:
         return redirect(url_for('index'))
+
+
+@app.route('/club/<name>')
+@login_required
+def club(name):
+    club = Club.query.filter_by(name=name).first_or_404()
+    form = EmptyForm()
+    return render_template('club.html', club=club, form=form)
