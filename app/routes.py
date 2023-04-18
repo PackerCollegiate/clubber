@@ -49,6 +49,7 @@ def register():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = RegistrationForm()
+    form.grade.choices = [9, 10, 11, 12]
     if form.validate_on_submit():
         user = User(username=form.username.data, grade=form.grade.data, email=form.email.data)
         user.set_password(form.password.data)
