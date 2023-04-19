@@ -145,3 +145,37 @@ def club(name):
     club = Club.query.filter_by(name=name).first_or_404()
     form = EmptyForm()
     return render_template('club.html', club=club, form=form)
+
+
+@app.route('/join/<club_name>', methods=['POST'])   #follow is join username is club_name
+@login_required
+def join(club_name):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        club = Club.query.filter_by(name=club_name).first()
+        if club is None:
+            flash('Club {} not found.'.format(club_name))
+            return redirect(url_for('index'))
+        current_user.join(club)
+        db.session.commit()
+        flash('You joined {}!'.format(club_name))
+        return redirect(url_for('club', name=club_name))
+    else:
+        return redirect(url_for('index'))
+
+
+@app.route('/unjoin/<club_name>', methods=['POST'])
+@login_required
+def unjoin(club_name):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        club = Club.query.filter_by(name=club_name).first()
+        if club is None:
+            flash('Club {} not found.'.format(club_name))
+            return redirect(url_for('index'))
+        current_user.unjoin(club)
+        db.session.commit()
+        flash('You are not in {} club.'.format(club_name))
+        return redirect(url_for('club', name=club_name))
+    else:
+        return redirect(url_for('index'))

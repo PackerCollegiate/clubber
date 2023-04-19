@@ -4,15 +4,22 @@
     <table>
         <tr valign="top">
                 <h1>Club: {{ club.name }}</h1>
-                <p>Description: {{club.description}}th</p>
+                <p>Description: {{club.description}}</p>
                 <p>Created By: {{ club.user_name }}</p>
-                {% if user == current_user %}
-                <p><a href="{{ url_for('edit_profile') }}">Edit Description</a></p>
-                {% else %}
+                <p>{{ club.members.count() }} members.</p>
                 <p>
-                  Add joining options soon!
+                    <form action="{{ url_for('join', club_name=club.name) }}" method="post">
+                        {{ form.hidden_tag() }}
+                        {{ form.submit(value='Follow') }}
+                    </form>
                 </p>
-                {% endif %}
+                <p>
+                    <form action="{{ url_for('unjoin', club_name=club.name) }}" method="post">
+                        {{ form.hidden_tag() }}
+                        {{ form.submit(value='Unfollow') }}
+                    </form>
+                </p>
+
         </tr>
     </table>
     <hr>

@@ -11,6 +11,12 @@ followers = db.Table(
     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
 )
 
+members = db.Table(
+    'members',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('club_id', db.Integer, db.ForeignKey('club.id'))
+)
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -25,6 +31,11 @@ class User(UserMixin, db.Model):
         primaryjoin=(followers.c.follower_id == id),
         secondaryjoin=(followers.c.followed_id == id),
         backref=db.backref('followers', lazy='dynamic'), lazy='dynamic')
+    joined = db.relationship(
+        'Club', secondary=members,
+        # primaryjoin=(members.c.user_id == id),
+        # secondaryjoin=(members.c.club_id == id),
+        backref=db.backref('members', lazy='dynamic'), lazy='dynamic')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -51,6 +62,18 @@ class User(UserMixin, db.Model):
     def is_following(self, user):
         return self.followed.filter(
             followers.c.followed_id == user.id).count() > 0
+
+    def join(self, club):
+        if not self.is_joined(club):
+            self.joined.append(club)
+
+    def unjoin(self, club):
+        if self.is_joined(club):
+            self.joined.remove(club)
+
+    def is_joined(self, club):
+        return self.joined.filter(
+            members.c.club_id == club.id).count() > 0
 
 
 @login.user_loader
