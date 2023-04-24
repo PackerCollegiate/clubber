@@ -156,7 +156,7 @@ def join(club_name):
         if club is None:
             flash('Club {} not found.'.format(club_name))
             return redirect(url_for('index'))
-        current_user.join(club)
+        club.join(current_user)
         db.session.commit()
         flash('You joined {}!'.format(club_name))
         return redirect(url_for('club', name=club_name))
@@ -173,7 +173,7 @@ def unjoin(club_name):
         if club is None:
             flash('Club {} not found.'.format(club_name))
             return redirect(url_for('index'))
-        current_user.unjoin(club)
+        club.unjoin(current_user)
         db.session.commit()
         flash('You are not in {} club.'.format(club_name))
         return redirect(url_for('club', name=club_name))

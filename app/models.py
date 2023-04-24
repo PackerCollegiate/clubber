@@ -11,8 +11,8 @@ followers = db.Table(
     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
 )
 
-members = db.Table(
-    'members',
+membership = db.Table(
+    'membership',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('club_id', db.Integer, db.ForeignKey('club.id'))
 )
@@ -31,11 +31,6 @@ class User(UserMixin, db.Model):
         primaryjoin=(followers.c.follower_id == id),
         secondaryjoin=(followers.c.followed_id == id),
         backref=db.backref('followers', lazy='dynamic'), lazy='dynamic')
-    joined = db.relationship(
-        'Club', secondary=members,
-        # primaryjoin=(members.c.user_id == id),
-        # secondaryjoin=(members.c.club_id == id),
-        backref=db.backref('members', lazy='dynamic'), lazy='dynamic')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -63,18 +58,6 @@ class User(UserMixin, db.Model):
         return self.followed.filter(
             followers.c.followed_id == user.id).count() > 0
 
-    def join(self, club):
-        if not self.is_joined(club):
-            self.joined.append(club)
-
-    def unjoin(self, club):
-        if self.is_joined(club):
-            self.joined.remove(club)
-
-    def is_joined(self, club):
-        return self.joined.filter(
-            members.c.club_id == club.id).count() > 0
-
 
 @login.user_loader
 def load_user(id):
@@ -86,6 +69,20 @@ class Club(db.Model):
     description = db.Column(db.String(300))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user_name = db.Column(db.String(40))
+    members = db.relationship('User', secondary=membership, backref=db.backref(
+    'membership', lazy='dynamic'), lazy='dynamic')
 
     def __repr__(self):
         return '<{} Club>'.format(self.name)
+
+    def join(self, user):
+        if not self.is_joined(user):
+            self.members.append(user)
+
+    def unjoin(self, user):
+        if self.is_joined(user):
+            self.members.remove(user)
+
+    def is_joined(self, user):
+        return self.members.filter(
+            membership.c.user_id == user.id).count() > 0
