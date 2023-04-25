@@ -7,19 +7,21 @@
                 <p>Description: {{club.description}}</p>
                 <p>Created By: {{ club.user_name }}</p>
                 <p>{{ club.members.count() }} members.</p>
+                {% if not club.is_joined(current_user) %}
                 <p>
                     <form action="{{ url_for('join', club_name=club.name) }}" method="post">
                         {{ form.hidden_tag() }}
-                        {{ form.submit(value='Follow') }}
+                        {{ form.submit(value='Join') }}
                     </form>
                 </p>
+                {% else %}
                 <p>
                     <form action="{{ url_for('unjoin', club_name=club.name) }}" method="post">
                         {{ form.hidden_tag() }}
-                        {{ form.submit(value='Unfollow') }}
+                        {{ form.submit(value='Unjoin') }}
                     </form>
                 </p>
-
+                {% endif %}
         </tr>
     </table>
     <hr>
