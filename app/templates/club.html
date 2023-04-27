@@ -21,8 +21,12 @@
                         {{ form.submit(value='Unjoin') }}
                     </form>
                 </p>
-                {% endif %}
         </tr>
     </table>
+    {% endif %}
     <hr>
+    <p>Club Members:</p>
+    {% for member in members %}
+        <p>{{member.username}}</p>
+    {% endfor %}
 {% endblock %}

@@ -105,8 +105,9 @@ def edit_profile():
 @login_required
 def club(name):
     club = Club.query.filter_by(name=name).first_or_404()
+    members = club.members
     form = EmptyForm()
-    return render_template('club.html', club=club, form=form)
+    return render_template('club.html', club=club, members=members, form=form)
 
 
 @app.route('/join/<club_name>', methods=['POST'])   #follow is join username is club_name
