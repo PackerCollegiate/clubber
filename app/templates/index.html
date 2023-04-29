@@ -1,6 +1,7 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
-{% block content %}
+{% block app_content %}
     <h1>Hi, {{ current_user.username }}!</h1>
     {% for club in clubs %}
     <div><p>{{ club.user_name }} created: <b>{{ club.name }}</b></p>
