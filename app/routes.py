@@ -5,6 +5,7 @@ from werkzeug.urls import url_parse
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, ClubForm, EditProfileForm, EmptyForm
 from app.models import User, Club
+from urllib.parse import urlencode
 
 @app.before_request
 def before_request():

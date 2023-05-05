@@ -1,7 +1,63 @@
-<table>
-    <tr valign="top">
-        <td>Leader: {{ club.user_name}}
-        <br>Club name: {{ club.name }}
-        <br>Description: {{ club.description }}</td>
-    </tr>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Float four columns side by side */
+.column {
+  float: left;
+  width: 33%;
+  padding: 0 10px;
+}
+
+/* Remove extra left and right margins, due to padding */
+.row {margin: 0 -5px;}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive columns */
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+  }
+}
+
+/* Style the counter cards */
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  text-align: center;
+  background-color: #f1f1f1;
+  min-height: 200px;
+}
+</style>
+<table><tr>
+  <div class="col-md-4">
+    <div class="card mb-4">
+      <div class="card-header">
+        {% if 'club' in club.name or 'Club' in club.name%}
+        <H3>{{ club.name }}</H3>
+        {% else %}
+        <H3>{{ club.name }} Club</H3>
+        {% endif %}
+      </div>
+      <div class="card-body">
+        <p class="card-text">Description: {{ club.description }}</p>
+
+      <a href="{{ url_for('club', name=club.name) }}" class="btn btn-primary btn-sm">View Profile</a>
+      </div>
+    </div><br>
+  </div>
 </table>
