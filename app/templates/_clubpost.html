@@ -41,6 +41,7 @@ body {
   text-align: center;
   background-color: #f1f1f1;
   min-height: 200px;
+  max-height: 200px;
 }
 </style>
 <table><tr>
@@ -54,7 +55,12 @@ body {
         {% endif %}
       </div>
       <div class="card-body">
-        <p class="card-text">Description: {{ club.description }}</p>
+        {% if club.description|length > 80 %}
+        <p class="card-text">Description: {{ club.description[:80] }}...</p>
+        {% else%}
+        <p class="card-text">Description: {{ club.description}}...</p>
+        {% endif%}
+        <p class="card-text">Members: {{ club.members.count() }}</p>
 
       <a href="{{ url_for('club', name=club.name) }}" class="btn btn-primary btn-sm">View Profile</a>
       </div>
