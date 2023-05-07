@@ -19,6 +19,6 @@
     <hr>
     <p>Your clubs: </p>
     {% for club in clubs %}
-        <p>{{club.name}}</p>
+        {% include '_clubpost.html' %}
     {% endfor %}
 {% endblock %}
