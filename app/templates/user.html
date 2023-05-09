@@ -17,8 +17,10 @@
         </tr>
     </table>
     <hr>
-    <p>Your clubs: </p>
+  {% if user == current_user %}
+    <p>Joined clubs: </p>
     {% for club in clubs %}
-        {% include '_clubpost.html' %}
+        {% include '_clubCard.html' %}
     {% endfor %}
+  {% endif %}
 {% endblock %}

@@ -26,8 +26,12 @@
     </table>
     {% endif %}
     <hr>
+    {%if members.count() == 0 %}
+    <p>No members yet.</p>
+    {% else %}
     <p>Club Members:</p>
     {% for member in members %}
-        <p>{{member.username}}</p>
+        {% include '_userCard.html' %}
     {% endfor %}
+    {%endif%}
 {% endblock %}
