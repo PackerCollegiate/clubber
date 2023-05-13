@@ -107,8 +107,6 @@ def edit_profile():
 def club(name):
     club = Club.query.filter_by(name=name).first_or_404()
     members = club.members
-    for member in members:
-        print(member)
     form = EmptyForm()
     return render_template('club.html', club=club, members=members, form=form)
 
