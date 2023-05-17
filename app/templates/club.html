@@ -6,7 +6,7 @@
         <tr valign="top">
                 <h1>Club: {{ club.name }}</h1>
                 <p>Description: {{club.description}}</p>
-                <p>Created By: {{ club.user_name }}</p>
+                <p>Leader: {{ club.user_name }}</p>
                 <p>{{ club.members.count() }} members.</p>
                 {% if not club.is_joined(current_user) %}
                 <p>
