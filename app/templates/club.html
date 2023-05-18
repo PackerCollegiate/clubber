@@ -3,6 +3,7 @@
 
 {% block app_content %}
     <table>
+      <div class="container">
         <tr valign="top">
                 <h1>Club: {{ club.name }}</h1>
                 <p>Description: {{club.description}}</p>
@@ -23,15 +24,39 @@
                     </form>
                 </p>
         </tr>
+        </div>
     </table>
-    {% endif %}
     <hr>
-    {%if members.count() == 0 %}
-    <p>No members yet.</p>
-    {% else %}
-    <p>Club Members:</p>
-    {% for member in members %}
-        {% include '_userCard.html' %}
-    {% endfor %}
+    <div class="container">
+      {%if members.count() == 0 %}
+      <p>No members yet.</p>
+      {% else %}
+      <p>Club Members:</p>
+      {% for member in members %}
+          {% include '_userCard.html' %}
+      {% endfor %}
+    </div>
     {%endif%}
+    <hr>
+    <div class="container">
+      {% if postForm %}
+      <form action="" method="post">
+          {{ postForm.hidden_tag() }}
+          <p>
+              {{ postForm.post.label }}<br>
+              {{ postForm.post(cols=32, rows=4) }}<br>
+              {% for error in postForm.post.errors %}
+              <span style="color: red;">[{{ error }}]</span>
+              {% endfor %}
+          </p>
+          <p>{{ postForm.submit() }}</p>
+      </form>
+      {% endif %}
+      <hr>
+      <h2>Club updates:</h2>
+      {% for post in posts %}
+          {% include '_post.html' %}
+      {% endfor %}
+    </div>
+    {% endif %}
 {% endblock %}

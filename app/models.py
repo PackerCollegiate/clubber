@@ -10,7 +10,6 @@ membership = db.Table(
     db.Column('club_id', db.Integer, db.ForeignKey('club.id'))
 )
 
-
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
@@ -37,6 +36,13 @@ class User(UserMixin, db.Model):
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
             digest, size)
 
+    # def followed_posts(self):
+    #     followed = Post.query.join(
+    #         followers, (followers.c.followed_id == Post.user_id)).filter(
+    #             followers.c.follower_id == self.id)
+    #     own = Post.query.filter_by(user_id=self.id)
+    #     return followed.union(own).order_by(Post.timestamp.desc())
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -49,6 +55,7 @@ class Club(db.Model):
     user_name = db.Column(db.String(40))
     members = db.relationship('User', secondary=membership, backref=db.backref(
     'membership', lazy='dynamic'), lazy='dynamic')
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
 
     def __repr__(self):
         return '<{} Club>'.format(self.name)
@@ -64,3 +71,12 @@ class Club(db.Model):
     def is_joined(self, user):
         return self.members.filter(
             membership.c.user_id == user.id).count() > 0
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.String(140))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    club_id = db.Column(db.Integer, db.ForeignKey('club.id'))
+
+    def __repr__(self):
+        return '<Post {}>'.format(self.body)

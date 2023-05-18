@@ -1,0 +1,12 @@
+<table class="table table-hover">
+    <tr>
+        <td>
+            <a href="{{ url_for('club', name=post.author.name) }}">
+                {{ post.author.name }}
+            </a>
+            says:
+            <br>
+            {{ post.body }}
+        </td>
+    </tr>
+</table>

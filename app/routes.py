@@ -3,8 +3,8 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, ClubForm, EditProfileForm, EmptyForm
-from app.models import User, Club
+from app.forms import LoginForm, RegistrationForm, ClubForm, EditProfileForm, EmptyForm, PostForm
+from app.models import User, Club, Post
 from urllib.parse import urlencode
 
 @app.before_request
@@ -77,13 +77,12 @@ def createclub():
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     clubs = user.joined
-    # print([club.name for club in clubs])
-    # clubs = [
-    #     {'author': user, 'body': 'Test club #1'},
-    #     {'author': user, 'body': 'Test post #2'}
-    # ]
+    createdClubs = Club.query.filter_by(user_id=user.id)
+    for club in createdClubs:
+        print(club.name)
     form = EmptyForm()
-    return render_template('user.html', user=user, clubs=clubs, form=form)
+    posts = Post.query.all()
+    return render_template('user.html', user=user, clubs=clubs, createdClubs=createdClubs, form=form, posts=posts)
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -102,13 +101,22 @@ def edit_profile():
                            form=form)
 
 
-@app.route('/club/<name>')
+@app.route('/club/<name>', methods=['GET', 'POST'])
 @login_required
 def club(name):
     club = Club.query.filter_by(name=name).first_or_404()
+    postForm = PostForm()
+    if postForm.validate_on_submit():
+        print("hi")
+        post = Post(body=postForm.post.data, author=club)
+        print("here")
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post is now live!')
+    posts = Post.query.filter_by(author=club)
     members = club.members
     form = EmptyForm()
-    return render_template('club.html', club=club, members=members, form=form)
+    return render_template('club.html', postForm=postForm, posts=posts, club=club, members=members, form=form)
 
 
 @app.route('/join/<club_name>', methods=['POST'])   #follow is join username is club_name
